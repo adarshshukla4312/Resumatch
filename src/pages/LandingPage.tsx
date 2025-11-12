@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CheckCircle, Target, TrendingUp, Zap, Sparkles, ArrowRight, BarChart3, Users } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { motion } from "motion/react";
+import { ReactNode } from "react";
 
 export function LandingPage() {
   return (
@@ -53,8 +54,8 @@ export function LandingPage() {
                 transition={{ delay: 0.2, duration: 0.5 }}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#3A0CA3] to-[#4CC9F0] bg-opacity-10 rounded-full border border-[#4CC9F0] border-opacity-30"
               >
-                <Sparkles className="w-4 h-4 text-[#3A0CA3]" />
-                <span className="text-sm font-medium text-[#3A0CA3]">AI-Powered Resume Analysis</span>
+                <Sparkles className="w-4 h-4 text-white" />
+                <span className="text-sm font-medium text-white">AI-Powered Resume Analysis</span>
               </motion.div>
 
               {/* Heading */}
@@ -72,7 +73,8 @@ export function LandingPage() {
                   Your Resume Is
                 </motion.h1>
                 <motion.p 
-                  className="text-xl md:text-2xl text-[#555555] leading-relaxed max-w-xl"
+                  className="text-xl md:text-2xl text-[#555555] leading-relaxed"
+                  style={{ opacity: 1, transform: 'none' }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.6 }}
@@ -229,32 +231,32 @@ export function LandingPage() {
             <h2 className="text-4xl md:text-5xl font-bold text-[#1E1E1E] mb-6">
               Why Choose ResuMatch?
             </h2>
-            <p className="text-xl text-[#555555] max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-[#555555] leading-relaxed">
               Get AI-powered insights to transform your resume and land your dream job
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             <FeatureCard
-              icon={<Zap className="w-6 h-6" />}
+              icon={<Zap className="w-6 h-6 text-white" />}
               title="Instant AI Analysis"
               description="Get comprehensive resume evaluation in seconds using advanced AI technology."
               index={0}
             />
             <FeatureCard
-              icon={<Target className="w-6 h-6" />}
+              icon={<Target className="w-6 h-6 text-white" />}
               title="Role-Specific Matching"
               description="See exactly how well your resume aligns with your target job position."
               index={1}
             />
             <FeatureCard
-              icon={<TrendingUp className="w-6 h-6" />}
+              icon={<TrendingUp className="w-6 h-6 text-white" />}
               title="Skill Gap Detection"
               description="Identify missing skills and get personalized recommendations to improve."
               index={2}
             />
             <FeatureCard
-              icon={<CheckCircle className="w-6 h-6" />}
+              icon={<CheckCircle className="w-6 h-6 text-white" />}
               title="Actionable Feedback"
               description="Receive detailed insights on strengths and areas that need improvement."
               index={3}
@@ -266,7 +268,7 @@ export function LandingPage() {
               index={4}
             />
             <FeatureCard
-              icon={<Sparkles className="w-6 h-6" />}
+              icon={<Sparkles className="w-6 h-6 text-white" />}
               title="Career Guidance"
               description="Access upskilling resources and expert consultation opportunities."
               index={5}
@@ -298,14 +300,14 @@ export function LandingPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.2, duration: 0.5 }}
             >
-              <span className="px-4 py-2 bg-gradient-to-r from-[#3A0CA3] to-[#4CC9F0] bg-opacity-10 text-[#3A0CA3] rounded-full text-sm font-medium border border-[#3A0CA3] border-opacity-20">
+              <span className="px-4 py-2 bg-gradient-to-r from-[#3A0CA3] to-[#4CC9F0] bg-opacity-10 text-white rounded-full text-sm font-medium border border-[#3A0CA3] border-opacity-20">
                 Simple Process
               </span>
             </motion.div>
             <h2 className="text-4xl md:text-5xl font-bold text-[#1E1E1E] mb-6">
               How It Works
             </h2>
-            <p className="text-xl text-[#555555] max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-[#555555] leading-relaxed">
               Three simple steps to understand your resume's potential
             </p>
           </motion.div>
@@ -422,15 +424,15 @@ export function LandingPage() {
               transition={{ delay: 0.6, duration: 0.6 }}
             >
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5" />
+                <CheckCircle className="w-5 h-5 text-white" />
                 <span>Free to use</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5" />
+                <CheckCircle className="w-5 h-5 text-white" />
                 <span>No credit card required</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5" />
+                <CheckCircle className="w-5 h-5 text-white" />
                 <span>Instant results</span>
               </div>
             </motion.div>
@@ -442,7 +444,7 @@ export function LandingPage() {
 }
 
 interface FeatureCardProps {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
   index: number;

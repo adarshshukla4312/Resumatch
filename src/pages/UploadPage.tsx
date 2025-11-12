@@ -129,7 +129,7 @@ export function UploadPage() {
                 style={{ boxShadow: '0 2px 8px rgba(58,12,163,0.25)' }}
                 disabled={!resumeText.trim() || !jobRole.trim()}
               >
-                <Sparkles className="w-5 h-5" />
+                <Sparkles className="w-5 h-5 text-white" />
                 Analyze My Resume
               </button>
             </form>

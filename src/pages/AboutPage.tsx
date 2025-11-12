@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { Target, Zap, Users, TrendingUp, CheckCircle } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
@@ -70,19 +71,19 @@ export function AboutPage() {
           <div className="grid md:grid-cols-3 gap-8">
             <ProcessStep
               number="1"
-              icon={<Target className="w-6 h-6" />}
+              icon={<Target className="w-6 h-6 text-white" />}
               title="Input & Analysis"
               description="Paste your resume and tell us your target job role. Our AI immediately begins analyzing your content against industry standards."
             />
             <ProcessStep
               number="2"
-              icon={<Zap className="w-6 h-6" />}
+              icon={<Zap className="w-6 h-6 text-white" />}
               title="AI Evaluation"
               description="Advanced algorithms compare your resume with job requirements, identifying strengths, weaknesses, and skill gaps in real-time."
             />
             <ProcessStep
               number="3"
-              icon={<TrendingUp className="w-6 h-6" />}
+              icon={<TrendingUp className="w-6 h-6 text-white" />}
               title="Get Insights"
               description="Receive a detailed match score, structured feedback, and personalized recommendations to improve your resume."
             />
@@ -101,27 +102,27 @@ export function AboutPage() {
 
           <div className="space-y-6">
             <FeatureRow
-              icon={<CheckCircle className="w-6 h-6" />}
+              icon={<CheckCircle className="w-6 h-6 text-white" />}
               title="AI-Powered Resume Evaluation"
               description="Get instant analysis of your resume's relevance to your target job role with detailed scoring."
             />
             <FeatureRow
-              icon={<CheckCircle className="w-6 h-6" />}
+              icon={<CheckCircle className="w-6 h-6 text-white" />}
               title="Skill Gap Detection"
               description="Identify missing or weak skills that are essential for your desired position."
             />
             <FeatureRow
-              icon={<CheckCircle className="w-6 h-6" />}
+              icon={<CheckCircle className="w-6 h-6 text-white" />}
               title="Actionable Feedback"
               description="Receive specific recommendations on how to improve your resume and boost your job readiness."
             />
             <FeatureRow
-              icon={<CheckCircle className="w-6 h-6" />}
+              icon={<CheckCircle className="w-6 h-6 text-white" />}
               title="Upskilling Recommendations"
               description="Discover courses and learning paths to bridge skill gaps (coming soon)."
             />
             <FeatureRow
-              icon={<CheckCircle className="w-6 h-6" />}
+              icon={<CheckCircle className="w-6 h-6 text-white" />}
               title="Expert Consultation"
               description="Connect with industry professionals for personalized career advice (coming soon)."
             />
@@ -147,12 +148,12 @@ export function AboutPage() {
               description="Direct access to industry experts for personalized career guidance and interview preparation"
             />
             <VisionCard
-              icon={<TrendingUp className="w-8 h-8" />}
+              icon={<TrendingUp className="w-8 h-8 text-white" />}
               title="Learning Paths"
               description="Curated upskilling courses and certifications tailored to your career goals"
             />
             <VisionCard
-              icon={<Target className="w-8 h-8" />}
+              icon={<Target className="w-8 h-8 text-white" />}
               title="Job Matching"
               description="Smart job recommendations based on your skills and aspirations with direct application links"
             />

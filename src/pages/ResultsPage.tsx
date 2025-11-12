@@ -176,7 +176,7 @@ Powered by ResuMatch AI
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-[#2196F3] bg-opacity-10 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-[#2196F3]" />
+                <TrendingUp className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-xl font-semibold text-[#1E1E1E]">
                 Points to Improve
