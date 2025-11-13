@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2, FileSearch, Sparkles, CheckCircle } from "lucide-react";
+import { supabase } from "../utils/supabaseClient";
+import { generateMockAnalysis } from "../utils/mockAnalysis";
 
 const ANALYSIS_STEPS = [
   "Parsing resume content...",
@@ -18,40 +20,128 @@ export function AnalyzingPage() {
 
   useEffect(() => {
     // Check if resume data exists
-    const data = sessionStorage.getItem('resumeData');
-    if (!data) {
+    const resumeId = sessionStorage.getItem('resumeId');
+    const jobRole = sessionStorage.getItem('jobRole');
+    
+    if (!resumeId || !jobRole) {
       navigate('/upload');
       return;
     }
 
-    // Simulate analysis progress
-    const stepInterval = setInterval(() => {
-      setCurrentStep((prev) => {
-        if (prev < ANALYSIS_STEPS.length - 1) {
-          return prev + 1;
-        }
-        return prev;
-      });
-    }, 800);
+    let stepInterval: NodeJS.Timeout | null = null;
+    let progressInterval: NodeJS.Timeout | null = null;
+    let analysisTimer: NodeJS.Timeout | null = null;
 
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev < 100) {
-          return prev + 2;
-        }
-        return prev;
-      });
-    }, 100);
+    const processResume = async () => {
+      try {
+        // Fetch resume from Supabase
+        console.log('Fetching resume with ID:', resumeId);
+        const { data: resume, error } = await supabase
+          .from('resumes')
+          .select('file_content')
+          .eq('id', resumeId)
+          .single();
 
-    // Navigate to results after analysis
-    const timer = setTimeout(() => {
-      navigate('/results');
-    }, 5000);
+        if (error) {
+          console.error('Error fetching resume:', error);
+          throw error;
+        }
+        if (!resume) {
+          console.error('Resume not found');
+          navigate('/upload');
+          return;
+        }
+
+        console.log('Resume fetched successfully');
+
+        // Simulate analysis progress - update steps
+        stepInterval = setInterval(() => {
+          setCurrentStep((prev) => {
+            if (prev < ANALYSIS_STEPS.length - 1) {
+              return prev + 1;
+            }
+            return prev;
+          });
+        }, 800);
+
+        // Simulate analysis progress - update progress bar
+        progressInterval = setInterval(() => {
+          setProgress((prev) => {
+            if (prev < 100) {
+              return prev + 2;
+            }
+            return prev;
+          });
+        }, 100);
+
+        // Generate analysis after a delay to allow animations to play
+        analysisTimer = setTimeout(async () => {
+          // Generate analysis
+          console.log('Generating analysis for job role:', jobRole);
+          const analysis = generateMockAnalysis(resume.file_content, jobRole);
+          console.log('Analysis generated:', analysis);
+          
+          // Save analysis to Supabase
+          console.log('Saving analysis to Supabase');
+          
+          // Use the correct column names from the database schema
+          const { data: analysisResult, error: analysisError } = await supabase
+            .from('analysis_results')
+            .insert([
+              {
+                resume_id: resumeId,
+                score: analysis.score,
+                summary: analysis.summary,
+                strengths: analysis.strengths,
+                // Fix: Use the correct column name 'improvments' (typo in database)
+                improvments: analysis.improvements,
+                skill_gaps: analysis.skillGaps,
+                recommendations: analysis.recommendations
+              }
+            ])
+            .select()
+            .single();
+
+          if (analysisError) {
+            console.error('Error saving analysis:', analysisError);
+            throw analysisError;
+          }
+
+          console.log('Analysis saved successfully:', analysisResult);
+
+          // Store analysis ID in sessionStorage
+          sessionStorage.setItem('analysisId', analysisResult.id);
+          console.log('Analysis ID stored in sessionStorage:', analysisResult.id);
+
+          // Wait a bit more to ensure animations complete before navigating
+          setTimeout(() => {
+            // Clear intervals and navigate to results
+            if (stepInterval) clearInterval(stepInterval);
+            if (progressInterval) clearInterval(progressInterval);
+            console.log('Navigating to results page');
+            navigate('/results');
+          }, 1000); // Wait an additional second after analysis is complete
+        }, 5000); // Wait 5 seconds to simulate analysis time
+      } catch (error) {
+        console.error('Error processing resume:', error);
+        // Store error in sessionStorage for debugging
+        sessionStorage.setItem('analysisError', JSON.stringify(error.message || 'Unknown error'));
+        
+        // Clear intervals
+        if (stepInterval) clearInterval(stepInterval);
+        if (progressInterval) clearInterval(progressInterval);
+        
+        navigate('/upload');
+      }
+    };
+
+    processResume();
 
     return () => {
-      clearInterval(stepInterval);
-      clearInterval(progressInterval);
-      clearTimeout(timer);
+      // Cleanup intervals if component unmounts
+      if (stepInterval) clearInterval(stepInterval);
+      if (progressInterval) clearInterval(progressInterval);
+      if (analysisTimer) clearTimeout(analysisTimer);
     };
   }, [navigate]);
 

@@ -2,7 +2,17 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { CheckCircle, AlertCircle, TrendingUp, BookOpen, Users, Download, RotateCcw } from "lucide-react";
 import { ScoreMeter } from "../components/ScoreMeter";
-import { generateMockAnalysis, AnalysisResult } from "../utils/mockAnalysis";
+import { supabase } from "../utils/supabaseClient";
+
+export interface AnalysisResult {
+  score: number;
+  summary: string;
+  strengths: string[];
+  improvements: string[];
+  skillGaps: string[];
+  needsUpskilling: boolean;
+  recommendations: string[];
+}
 
 export function ResultsPage() {
   const navigate = useNavigate();
@@ -10,18 +20,64 @@ export function ResultsPage() {
   const [jobRole, setJobRole] = useState("");
 
   useEffect(() => {
-    const data = sessionStorage.getItem('resumeData');
-    if (!data) {
-      navigate('/upload');
-      return;
-    }
+    const fetchData = async () => {
+      const resumeId = sessionStorage.getItem('resumeId');
+      const analysisId = sessionStorage.getItem('analysisId');
+      const jobRole = sessionStorage.getItem('jobRole');
+      
+      console.log('ResultsPage - Resume ID:', resumeId);
+      console.log('ResultsPage - Analysis ID:', analysisId);
+      console.log('ResultsPage - Job Role:', jobRole);
+      
+      if (!resumeId || !analysisId || !jobRole) {
+        console.log('Missing required data, redirecting to upload');
+        navigate('/upload');
+        return;
+      }
 
-    const { resumeText, jobRole: role } = JSON.parse(data);
-    setJobRole(role);
-    
-    // Generate mock analysis
-    const result = generateMockAnalysis(resumeText, role);
-    setAnalysis(result);
+      setJobRole(jobRole);
+
+      try {
+        // Fetch analysis from Supabase
+        console.log('Fetching analysis from Supabase with ID:', analysisId);
+        const { data, error } = await supabase
+          .from('analysis_results')
+          .select('*')
+          .eq('id', analysisId)
+          .single();
+
+        if (error) {
+          console.error('Error fetching analysis:', error);
+          throw error;
+        }
+        if (!data) {
+          console.error('Analysis not found');
+          navigate('/upload');
+          return;
+        }
+
+        console.log('Analysis fetched successfully:', data);
+
+        // Handle the typo in the database column name
+        setAnalysis({
+          score: data.score || 0,
+          summary: data.summary || 'No summary available',
+          strengths: data.strengths || [],
+          // Fix: Use the correct column name 'improvments' (typo in database)
+          improvements: data.improvments || [],
+          skillGaps: data.skill_gaps || [],
+          recommendations: data.recommendations || [],
+          needsUpskilling: (data.skill_gaps && data.skill_gaps.length > 1 && data.skill_gaps[0] !== "No critical skill gaps identified") || false
+        });
+      } catch (error) {
+        console.error('Error fetching analysis:', error);
+        // Store error in sessionStorage for debugging
+        sessionStorage.setItem('resultsError', JSON.stringify(error.message || 'Unknown error'));
+        navigate('/upload');
+      }
+    };
+
+    fetchData();
   }, [navigate]);
 
   const handleDownloadReport = () => {
